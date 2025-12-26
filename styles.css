@@ -1,23 +1,28 @@
 :root{
   --bg0:#05060a;
   --bg1:#07122a;
-  --neon:#38bdf8;      /* cyan */
-  --neon2:#a78bfa;     /* purple */
-  --warn:#ff4d6d;      /* pink/red */
+
   --text:#e6edf3;
   --muted:#9fb3c8;
+
+  --neon:#38bdf8;   /* cyan */
+  --neon2:#a78bfa;  /* purple */
+  --warn:#ff4d6d;   /* pink/red */
+
   --glass: rgba(10, 18, 40, .55);
+  --glass2: rgba(0,0,0,.18);
   --line: rgba(120, 220, 255, .25);
+  --line2: rgba(167, 139, 250, .22);
 }
 
 *{ box-sizing:border-box; }
-html,body{ height:100%; margin:0; }
+html, body{ height:100%; margin:0; }
 body{
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Noto Sans TC", Arial, sans-serif;
   color: var(--text);
   overflow-x:hidden;
 
-  /* base cyber gradient */
+  /* neon background */
   background:
     radial-gradient(900px 700px at 20% 15%, rgba(56,189,248,.18), transparent 55%),
     radial-gradient(900px 700px at 80% 25%, rgba(167,139,250,.16), transparent 55%),
@@ -60,17 +65,22 @@ body::after{
   pointer-events:none;
 }
 
+.mono{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}
+
+/* ===== App wrapper ===== */
 .app{
   min-height:100vh;
   display:flex;
   flex-direction:column;
-  align-items:center; /* 讓整體置中 */
+  align-items:center;
 }
 
-/* HUD header */
-.hud{
-  width:min(1100px, 94vw);
-  margin-top:16px;
+/* ===== Top HUD ===== */
+.topbar{
+  width:min(1180px, 94vw);
+  margin:16px auto 0;
   padding:14px 14px 12px;
   border-radius:18px;
   background: var(--glass);
@@ -82,26 +92,28 @@ body::after{
   backdrop-filter: blur(10px);
 }
 
-.hudTitle .t1{
+.brand .title{
   font-weight:900;
   letter-spacing:.5px;
   font-size:16px;
   text-shadow: 0 0 18px rgba(56,189,248,.22);
 }
-.hudTitle .t2{
+.brand .subtitle{
   margin-top:4px;
   color: var(--muted);
   font-size:12px;
 }
 
-.hudControls{
+.controls{
   margin-top:10px;
   display:flex;
   flex-wrap:wrap;
   gap:10px;
   align-items:center;
+  justify-content:flex-start;
 }
 
+/* ===== Buttons ===== */
 .btn{
   padding:9px 12px;
   border-radius:14px;
@@ -131,7 +143,8 @@ body::after{
     0 0 18px rgba(255,77,109,.14);
 }
 
-.field{
+/* ===== Select blocks (兼容你原本 .select) ===== */
+.select{
   display:flex;
   align-items:center;
   gap:8px;
@@ -141,11 +154,12 @@ body::after{
   background: rgba(0,0,0,.18);
   box-shadow: 0 0 18px rgba(167,139,250,.10);
 }
-.field > span{
+.select label{
   font-size:12px;
   color: var(--muted);
   font-weight:700;
 }
+
 select, input[type="number"]{
   background: rgba(0,0,0,.18);
   color: var(--text);
@@ -159,26 +173,25 @@ select:focus, input:focus{
   border-color: rgba(56,189,248,.45);
 }
 
-.toast{
-  margin-top:10px;
-  padding:10px 12px;
-  border-radius:14px;
-  border:1px solid rgba(56,189,248,.20);
-  background: rgba(0,0,0,.18);
-  color: var(--text);
-  min-height: 40px;
-  box-shadow: 0 0 18px rgba(56,189,248,.08);
+/* ===== Main layout ===== */
+.layout{
+  width:min(1180px, 94vw);
+  margin:16px auto;
+  display:grid;
+  grid-template-columns: 1fr 320px;
+  gap:16px;
+  align-items:start;
 }
 
-/* ===== Center the board ===== */
-.stage{
-  width: 100%;
+/* the group that contains board + panel */
+.boardWrap{
   display:flex;
-  justify-content:center;   /* 棋盤水平置中 */
+  gap:14px;
   align-items:flex-start;
-  padding: 18px 0 28px;
+  justify-content:center; /* 核心：這裡讓棋盤群組往中間 */
 }
 
+/* ===== Board container ===== */
 .boardCard{
   width:min(760px, 92vmin);
   padding:14px;
@@ -192,7 +205,7 @@ select:focus, input:focus{
   backdrop-filter: blur(10px);
 }
 
-/* keep your canvas responsive */
+/* keep canvas responsive + centered */
 #board{
   width: 100%;
   height: auto;
@@ -200,4 +213,128 @@ select:focus, input:focus{
   border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
   box-shadow: 0 0 0 1px rgba(0,0,0,.25) inset;
+}
+
+/* ===== Side panels ===== */
+.panel{
+  width: 340px;
+  border-radius:18px;
+  padding:14px;
+  background: rgba(15,23,36,.55);
+  border:1px solid rgba(56,189,248,.18);
+  box-shadow:
+    0 0 0 1px rgba(167,139,250,.10) inset,
+    0 18px 60px rgba(0,0,0,.35),
+    0 0 26px rgba(56,189,248,.08);
+  backdrop-filter: blur(10px);
+}
+
+.row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+.badge{
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.3px;
+}
+.badge.black{
+  background: rgba(0,0,0,.30);
+  border:1px solid rgba(255,255,255,.12);
+}
+.badge.white{
+  background: rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.12);
+  color:#0b0f14;
+}
+
+.stats{
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* 你原本 msg + 我加上霓虹 toast 效果 */
+.msg{
+  min-height:48px;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(56,189,248,.18);
+  background: rgba(0,0,0,.18);
+  color: var(--text);
+  line-height:1.35;
+  box-shadow: 0 0 18px rgba(56,189,248,.08);
+}
+
+/* scoring area */
+.scoring{
+  margin-top:12px;
+  padding:12px;
+  border-radius:16px;
+  border:1px dashed rgba(56,189,248,.35);
+  background: rgba(56,189,248,.06);
+  display:none;
+}
+.scTitle{ font-weight:900; margin-bottom:8px; }
+.scHelp{ color:var(--muted); font-size:12px; line-height:1.5; }
+.scBtns{ display:flex; gap:10px; margin-top:10px; }
+.scoreOut{
+  margin-top:10px;
+  padding:10px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.25);
+  max-height: 260px;
+  overflow:auto;
+  white-space: pre-wrap;
+}
+
+/* ===== Right help card ===== */
+.help{
+  border-radius:18px;
+  padding:14px;
+  background: rgba(17,24,38,.50);
+  border:1px solid rgba(167,139,250,.20);
+  box-shadow:
+    0 0 0 1px rgba(56,189,248,.06) inset,
+    0 18px 60px rgba(0,0,0,.35),
+    0 0 24px rgba(167,139,250,.10);
+  backdrop-filter: blur(10px);
+}
+.help h2{
+  margin:6px 0 10px;
+  font-size:14px;
+  text-shadow: 0 0 18px rgba(167,139,250,.20);
+}
+.help ul{
+  margin:0;
+  padding-left:18px;
+  color:var(--muted);
+  line-height:1.6;
+  font-size:13px;
+}
+
+/* ===== Footer ===== */
+.footer{
+  width:min(1180px, 94vw);
+  margin: 0 auto 18px;
+  padding:14px 16px;
+  border-radius:18px;
+  border:1px solid rgba(56,189,248,.14);
+  background: rgba(0,0,0,.14);
+  color:var(--muted);
+  text-align:center;
+  box-shadow: 0 0 18px rgba(56,189,248,.06);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1040px){
+  .layout{ grid-template-columns: 1fr; }
+  .boardWrap{ flex-direction: column; align-items:center; }
+  .panel{ width: min(760px, 94vw); }
 }
