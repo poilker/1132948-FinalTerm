@@ -6,98 +6,114 @@
   <title>11XXXXX -FinalTerm</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <header class="topbar">
-    <div class="brand">
-      <div class="title">9 路圍棋（Go 9x9）</div>
-      <div class="subtitle">User 先手黑棋 · Computer 後手白棋</div>
-    </div>
 
-    <div class="controls">
-      <button id="newBtn" class="btn">新局</button>
-      <button id="undoBtn" class="btn">悔棋</button>
-      <button id="passBtn" class="btn">PASS</button>
-      <button id="resignBtn" class="btn danger">投降</button>
+<body class="cyber">
+  <div class="app">
 
-      <div class="select">
-        <label>難度</label>
-        <select id="levelSel">
-          <option value="basic">基本</option>
-          <option value="advanced">進階</option>
-        </select>
+    <!-- HUD / Top Bar -->
+    <header class="hud topbar">
+      <div class="brand hudTitle">
+        <div class="title">9 路圍棋（Go 9x9）</div>
+        <div class="subtitle">User 先手黑棋 · Computer 後手白棋</div>
       </div>
 
-      <div class="select">
-        <label>提示</label>
-        <select id="hintSel">
-          <option value="on">顯示合法/禁著點</option>
-          <option value="off">關閉</option>
-        </select>
-      </div>
+      <div class="controls hudControls">
+        <button id="newBtn" class="btn">新局</button>
+        <button id="undoBtn" class="btn">悔棋</button>
+        <button id="passBtn" class="btn">PASS</button>
+        <button id="resignBtn" class="btn danger">投降</button>
 
-      <div class="select">
-        <label>Komi</label>
-        <input id="komiInp" type="number" step="0.5" value="6.5" />
-      </div>
-    </div>
-  </header>
-
-  <main class="layout">
-    <section class="boardWrap">
-      <canvas id="board" width="720" height="720" aria-label="Go board"></canvas>
-
-      <div class="panel">
-        <div class="row">
-          <div class="badge black">黑棋</div>
-          <div id="turnTxt" class="mono">輪到：黑（你）</div>
+        <div class="select field">
+          <label>難度</label>
+          <select id="levelSel">
+            <option value="basic">基本</option>
+            <option value="advanced">進階</option>
+          </select>
         </div>
 
-        <div class="row stats">
-          <div>黑提子：<span id="capB" class="mono">0</span></div>
-          <div>白提子：<span id="capW" class="mono">0</span></div>
+        <div class="select field">
+          <label>提示</label>
+          <select id="hintSel">
+            <option value="on">顯示合法/禁著點</option>
+            <option value="off">關閉</option>
+          </select>
         </div>
 
-        <div id="msg" class="msg"></div>
+        <div class="select field">
+          <label>Komi</label>
+          <input id="komiInp" type="number" step="0.5" value="6.5" />
+        </div>
+      </div>
 
-        <div class="scoring" id="scoringBox">
-          <div class="scTitle">終局決算模式</div>
-          <div class="scHelp">
-            1) 點棋盤上的任意一顆子：會「整團」切換為死棋/活棋（死棋會半透明）<br />
-            2) 按「計算分數」會依死棋移除後的局面計算領地與總分
+      <!-- 訊息區：保留原本 id=msg 給 JS 用 -->
+      <div id="msg" class="msg toast"></div>
+    </header>
+
+    <!-- Main -->
+    <main class="layout mainGrid">
+
+      <!-- 中央對局區：棋盤+資訊面板（整組置中） -->
+      <section class="playArea boardWrap">
+
+        <div class="boardCard">
+          <canvas id="board" width="720" height="720" aria-label="Go board"></canvas>
+        </div>
+
+        <div class="panel panelCard">
+          <div class="row">
+            <div class="badge black">黑棋</div>
+            <div id="turnTxt" class="mono">輪到：黑（你）</div>
           </div>
-          <div class="scBtns">
-            <button id="calcBtn" class="btn">計算分數</button>
-            <button id="exitScoreBtn" class="btn">回到對局</button>
+
+          <div class="row stats">
+            <div>黑提子：<span id="capB" class="mono">0</span></div>
+            <div>白提子：<span id="capW" class="mono">0</span></div>
           </div>
-          <pre id="scoreOut" class="scoreOut"></pre>
+
+          <div class="scoring" id="scoringBox">
+            <div class="scTitle">終局決算模式</div>
+            <div class="scHelp">
+              1) 點棋盤上的任意一顆子：會「整團」切換為死棋/活棋（死棋會半透明）<br />
+              2) 按「計算分數」會依死棋移除後的局面計算領地與總分
+            </div>
+            <div class="scBtns">
+              <button id="calcBtn" class="btn">計算分數</button>
+              <button id="exitScoreBtn" class="btn">回到對局</button>
+            </div>
+            <pre id="scoreOut" class="scoreOut"></pre>
+          </div>
         </div>
-      </div>
-    </section>
 
-    <aside class="help">
-      <h2>操作</h2>
-      <ul>
-        <li>左鍵點交叉點落子</li>
-        <li>PASS：輪到你時可 PASS，連續兩次 PASS → 終局</li>
-        <li>禁著：占用 / 自殺 / 任何重複局面（Superko）都禁止</li>
-        <li>叫吃警告：若某團只剩 1 氣會提示</li>
-        <li>終局後可用「死活標記」協助活棋判斷與決算</li>
-      </ul>
+      </section>
 
-      <h2>作業重點對照</h2>
-      <ul>
-        <li>棋盤交叉點落子 ✅</li>
-        <li>提子規則 ✅</li>
-        <li>禁著點判定（自殺+重複局面）✅</li>
-        <li>終局判斷（連續 PASS）✅</li>
-        <li>終局決算（死活標記→領地+提子+komi）✅</li>
-      </ul>
-    </aside>
-  </main>
+      <!-- 右側說明（大螢幕在右側，小螢幕自動跑到下方） -->
+      <aside class="help helpCard">
+        <h2>操作</h2>
+        <ul>
+          <li>左鍵點交叉點落子</li>
+          <li>PASS：輪到你時可 PASS，連續兩次 PASS → 終局</li>
+          <li>禁著：占用 / 自殺 / 任何重複局面（Superko）都禁止</li>
+          <li>叫吃警告：若某團只剩 1 氣會提示</li>
+          <li>終局後可用「死活標記」協助活棋判斷與決算</li>
+        </ul>
 
-  <footer class="footer">
-    <span class="mono">11XXXXX -FinalTerm</span>
-  </footer>
+        <h2>作業重點對照</h2>
+        <ul>
+          <li>棋盤交叉點落子 ✅</li>
+          <li>提子規則 ✅</li>
+          <li>禁著點判定（自殺+重複局面）✅</li>
+          <li>終局判斷（連續 PASS）✅</li>
+          <li>終局決算（死活標記→領地+提子+komi）✅</li>
+        </ul>
+      </aside>
+
+    </main>
+
+    <footer class="footer">
+      <span class="mono">11XXXXX -FinalTerm</span>
+    </footer>
+
+  </div>
 
   <script src="script.js"></script>
 </body>
